@@ -20,7 +20,7 @@ import pickle
 PROJECT_ROOT = Path(__file__).parent.parent
 LATENT_VECTORS_CSV = PROJECT_ROOT / "data" / "latent_vectors.csv"
 MODELS_DIR = PROJECT_ROOT / "models"
-LATENT_DIM = 8
+LATENT_DIM = 16
 BATCH_SIZE = 64
 EPOCHS = 300
 LEARNING_RATE = 0.001
@@ -51,7 +51,6 @@ class LatentMapper(nn.Module):
         for hidden_dim in hidden_dims:
             layers.append(nn.Linear(prev_dim, hidden_dim))
             layers.append(nn.Tanh())
-            layers.append(nn.Dropout(0.2))
             prev_dim = hidden_dim
         
         layers.append(nn.Linear(prev_dim, output_dim))

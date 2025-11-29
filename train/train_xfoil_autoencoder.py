@@ -20,7 +20,7 @@ import json
 PROJECT_ROOT = Path(__file__).parent.parent
 AIRFOIL_DATA_DIR = PROJECT_ROOT / "data" / "airfoil_data"
 MODELS_DIR = PROJECT_ROOT / "models"
-LATENT_DIM = 8
+LATENT_DIM = 16
 INPUT_DIM = 101  # 1 (Reynolds) + 25 (alpha) + 25 (Cl) + 25 (cd) + 25 (L/D)
 ALPHA_LENGTH = 25  # Number of alpha values (-10 to 14)
 BATCH_SIZE = 32
@@ -49,30 +49,26 @@ class PerformanceAutoencoder(nn.Module):
         # Encoder: 101 -> 64 -> 32 -> 16 -> 8
         self.encoder = nn.Sequential(
             nn.Linear(input_dim, 128),
-            nn.ReLU(),
-            nn.Dropout(0.1),
+            nn.Tanh(),
             nn.Linear(128, 64),
-            nn.ReLU(),
-            nn.Dropout(0.1),
+            nn.Tanh(),
             nn.Linear(64, 32),
-            nn.ReLU(),
+            nn.Tanh(),
             nn.Linear(32, 16),
-            nn.ReLU(),
+            nn.Tanh(),
             nn.Linear(16, latent_dim)
         )
         
         # Decoder: 8 -> 16 -> 32 -> 64 -> 101
         self.decoder = nn.Sequential(
             nn.Linear(latent_dim, 16),
-            nn.ReLU(),
+            nn.Tanh(),
             nn.Linear(16, 32),
-            nn.ReLU(),
+            nn.Tanh(),
             nn.Linear(32, 64),
-            nn.ReLU(),
-            nn.Dropout(0.1),
+            nn.Tanh(),
             nn.Linear(64, 128),
-            nn.ReLU(),
-            nn.Dropout(0.1),
+            nn.Tanh(),
             nn.Linear(128, input_dim)
         )
     

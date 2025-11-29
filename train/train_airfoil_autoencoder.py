@@ -18,11 +18,11 @@ import pickle
 PROJECT_ROOT = Path(__file__).parent.parent
 BIGFOIL_DIR = PROJECT_ROOT / "data" / "bigfoil"
 MODELS_DIR = PROJECT_ROOT / "models"
-LATENT_DIM = 8
+LATENT_DIM = 16
 INPUT_DIM = 400  # 200 x-coordinates + 200 y-coordinates
 TARGET_POINTS = 200  # Number of points per airfoil
 BATCH_SIZE = 32
-EPOCHS = 130
+EPOCHS = 200
 LEARNING_RATE = 0.0005
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 

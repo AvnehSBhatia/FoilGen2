@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 PROJECT_ROOT = Path(__file__).parent.parent.parent
 BIGFOIL_DIR = PROJECT_ROOT / "data" / "bigfoil"
 MODELS_DIR = PROJECT_ROOT / "models"
-LATENT_DIM = 8
+LATENT_DIM = 16
 INPUT_DIM = 400  # 200 x-coordinates + 200 y-coordinates
 TARGET_POINTS = 200
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -136,7 +136,7 @@ def test_autoencoder():
                 latent_values = latent.cpu().numpy().flatten()
                 print(f"  Latent shape: {latent.shape}")
                 print(f"  Latent range: [{latent.min().item():.4f}, {latent.max().item():.4f}]")
-                print(f"  Latent vector (16 values):")
+                print(f"  Latent vector ({LATENT_DIM} values):")
                 # Format as a readable array
                 latent_str = ', '.join([f'{val:.6f}' for val in latent_values])
                 print(f"    [{latent_str}]")

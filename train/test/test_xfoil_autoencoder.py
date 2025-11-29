@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 PROJECT_ROOT = Path(__file__).parent.parent.parent
 AIRFOIL_DATA_DIR = PROJECT_ROOT / "data" / "airfoil_data"
 MODELS_DIR = PROJECT_ROOT / "models"
-LATENT_DIM = 8
+LATENT_DIM = 16
 INPUT_DIM = 101  # 1 (Reynolds) + 25 (alpha) + 25 (Cl) + 25 (cd) + 25 (L/D)
 ALPHA_LENGTH = 25
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -30,15 +30,13 @@ def load_encoder_decoder():
     encoder_checkpoint = torch.load(MODELS_DIR / "xfoil_encoder.pth", map_location=DEVICE)
     encoder = nn.Sequential(
         nn.Linear(encoder_checkpoint['input_dim'], 128),
-        nn.ReLU(),
-        nn.Dropout(0.1),
+        nn.Tanh(),
         nn.Linear(128, 64),
-        nn.ReLU(),
-        nn.Dropout(0.1),
+        nn.Tanh(),
         nn.Linear(64, 32),
-        nn.ReLU(),
+        nn.Tanh(),
         nn.Linear(32, 16),
-        nn.ReLU(),
+        nn.Tanh(),
         nn.Linear(16, encoder_checkpoint['latent_dim'])
     ).to(DEVICE)
     encoder.load_state_dict(encoder_checkpoint['model_state_dict'])
@@ -48,15 +46,13 @@ def load_encoder_decoder():
     decoder_checkpoint = torch.load(MODELS_DIR / "xfoil_decoder.pth", map_location=DEVICE)
     decoder = nn.Sequential(
         nn.Linear(decoder_checkpoint['input_dim'], 16),
-        nn.ReLU(),
+        nn.Tanh(),
         nn.Linear(16, 32),
-        nn.ReLU(),
+        nn.Tanh(),
         nn.Linear(32, 64),
-        nn.ReLU(),
-        nn.Dropout(0.1),
+        nn.Tanh(),
         nn.Linear(64, 128),
-        nn.ReLU(),
-        nn.Dropout(0.1),
+        nn.Tanh(),
         nn.Linear(128, decoder_checkpoint['output_dim'])
     ).to(DEVICE)
     decoder.load_state_dict(decoder_checkpoint['model_state_dict'])
@@ -148,7 +144,7 @@ def test_autoencoder():
                     latent_values = latent.cpu().numpy().flatten()
                     print(f"  Latent shape: {latent.shape}")
                     print(f"  Latent range: [{latent.min().item():.4f}, {latent.max().item():.4f}]")
-                    print(f"  Latent vector (8 values):")
+                    print(f"  Latent vector ({LATENT_DIM} values):")
                     latent_str = ', '.join([f'{val:.6f}' for val in latent_values])
                     print(f"    [{latent_str}]")
                     

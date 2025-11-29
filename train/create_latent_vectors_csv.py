@@ -38,15 +38,13 @@ def load_xfoil_encoder():
         encoder_checkpoint = torch.load(encoder_path, map_location=DEVICE)
         encoder = nn.Sequential(
             nn.Linear(encoder_checkpoint['input_dim'], 128),
-            nn.ReLU(),
-            nn.Dropout(0.1),
+            nn.Tanh(),
             nn.Linear(128, 64),
-            nn.ReLU(),
-            nn.Dropout(0.1),
+            nn.Tanh(),
             nn.Linear(64, 32),
-            nn.ReLU(),
+            nn.Tanh(),
             nn.Linear(32, 16),
-            nn.ReLU(),
+            nn.Tanh(),
             nn.Linear(16, encoder_checkpoint['latent_dim'])
         ).to(DEVICE)
         encoder.load_state_dict(encoder_checkpoint['model_state_dict'])
