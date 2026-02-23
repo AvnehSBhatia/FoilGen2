@@ -258,10 +258,3 @@ x2 y2
 **Issue**: Performance data generation fails
 - Solution: Ensure neuralfoil is installed and airfoil coordinates are valid
 
-## License
-
-[Add your license information here]
-
-## Acknowledgments
-
-This project uses neuralfoil for generating airfoil performance data.
